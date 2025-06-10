@@ -1,47 +1,73 @@
-const scanner = new Html5Qrcode("reader");
 
-Html5Qrcode.getCameras().then(devices => {
-  if (devices && devices.length) {
-    const cameraId = devices[0].id;  // Just use default (no force back cam)
+window.onload = function () {
+    // script.js (Test version without location check)
 
-    scanner.start(
-      cameraId,
-      {
-        fps: 10,
-        qrbox: { width: 250, height: 250 }
-      },
-      qrCodeMessage => {
-        document.getElementById("status").innerText = "QR Detected. Opening Form...";
-        window.location.href = qrCodeMessage;
-      },
-      errorMessage => {
-        // You can ignore or log errors if needed
-      }
-    );
-  } else {
-    document.getElementById("status").innerText = "No camera found";
-  }
-}).catch(err => {
-  document.getElementById("status").innerText = "Camera error: " + err;
-});
+    const video = document.getElementById('video');
+    const canvasElement = document.getElementById('canvas');
+    const canvas = canvasElement.getContext('2d');
+    const fileInput = document.getElementById('file-input');
+    const statusText = document.getElementById('status');
+    const qrResult = document.getElementById('qr-result');
 
-// Gallery Image Scan Logic
-document.getElementById("upload-btn").addEventListener("click", () => {
-  document.getElementById("file-input").click();
-});
-
-document.getElementById("file-input").addEventListener("change", e => {
-  if (e.target.files.length === 0) return;
-
-  const file = e.target.files[0];
-  const html5QrCode = new Html5Qrcode("reader");
-
-  html5QrCode.scanFile(file, true)
-    .then(decodedText => {
-      document.getElementById("status").innerText = "QR Detected from Image. Redirecting...";
-      window.location.href = decodedText;
-    })
-    .catch(err => {
-      document.getElementById("status").innerText = "Failed to scan image: " + err;
+    // Directly show scanner section without checking location
+    document.getElementById('start-btn').addEventListener('click', () => {
+        statusText.textContent = '📡 Scanner started...';
+        document.getElementById('scanner-section').style.display = 'block';
+        startScanner();
     });
-});
+
+
+    function startScanner() {
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+            .then((stream) => {
+                video.srcObject = stream;
+                video.setAttribute('playsinline', true);
+                video.play();
+                requestAnimationFrame(tick);
+            });
+    }
+
+    function tick() {
+        if (video.readyState === video.HAVE_ENOUGH_DATA) {
+            canvasElement.height = video.videoHeight;
+            canvasElement.width = video.videoWidth;
+            canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+            const imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+            const code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: 'dontInvert' });
+            if (code) {
+                qrResult.textContent = `QR Code: ${code.data}`;
+                window.location.href = code.data;
+            } else {
+                requestAnimationFrame(tick);
+            }
+        } else {
+            requestAnimationFrame(tick);
+        }
+    }
+
+    fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function () {
+            const img = new Image();
+            img.onload = function () {
+                canvasElement.width = img.width;
+                canvasElement.height = img.height;
+                canvas.drawImage(img, 0, 0);
+                const imageData = canvas.getImageData(0, 0, img.width, img.height);
+                const code = jsQR(imageData.data, imageData.width, imageData.height);
+                if (code) {
+                    qrResult.textContent = `QR Code: ${code.data}`;
+                    window.location.href = code.data;
+                } else {
+                    qrResult.textContent = 'No QR code found.';
+                }
+            };
+            img.src = reader.result;
+        };
+        reader.readAsDataURL(file);
+    });
+
+    // pura tera code yahan daal de
+};
