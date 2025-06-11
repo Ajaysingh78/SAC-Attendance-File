@@ -8,9 +8,9 @@ window.onload = function () {
     const startBtn = document.getElementById('start-btn');
     const scannerSection = document.getElementById('scanner-section');
 
-    const collegeLatitude = 23.183830;
-    const collegeLongitude = 77.327452;
-    const allowedDistanceKm = 0.2;
+    const collegeLatitude = 23.1854;
+    const collegeLongitude = 77.3271;
+    const allowedDistanceKm = 0.5; // 500 meters
 
     function getDistanceKm(lat1, lon1, lat2, lon2) {
         const R = 6371;
@@ -25,7 +25,13 @@ window.onload = function () {
     }
 
     startBtn.addEventListener('click', () => {
-        statusText.textContent = '📍 Checking location...';
+        statusText.textContent = '📍 Checking your location...';
+        if (!navigator.geolocation) {
+            alert("Geolocation is not supported by this browser.");
+            statusText.textContent = '❌ Geolocation not supported.';
+            return;
+        }
+
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 const dist = getDistanceKm(
@@ -34,43 +40,44 @@ window.onload = function () {
                     collegeLatitude,
                     collegeLongitude
                 );
+
                 if (dist <= allowedDistanceKm) {
                     statusText.textContent = '✅ On Campus. Starting Scanner...';
                     scannerSection.style.display = 'block';
                     startScanner();
                 } else {
-                    statusText.textContent = '❌ You are not at the college campus.';
-                    alert('You must be on campus to mark attendance.');
+                    statusText.textContent = '❌ You are not inside campus.';
+                    alert(`You are ${Math.round(dist * 1000)} meters away from campus. Attendance not allowed.`);
                 }
             },
-            (err) => {
-                console.error('Location error:', err.message);
+            (error) => {
+                console.error("Location Error:", error);
+                alert("Location permission is required. Please allow location and refresh the page.");
                 statusText.textContent = '❌ Location permission denied.';
-                alert('Please allow location access to continue.');
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 0
             }
         );
     });
 
     function startScanner() {
-        navigator.mediaDevices
-            .getUserMedia({
-                video: {
-                    facingMode: { ideal: 'environment' }, // fallback support
-                    width: { ideal: 1280 },
-                    height: { ideal: 720 }
-                }
-            })
-            .then((stream) => {
-                video.srcObject = stream;
-                video.setAttribute('playsinline', true);
-                video.play();
-                requestAnimationFrame(tick);
-            })
-            .catch((err) => {
-                console.error('Camera Error:', err.message);
-                statusText.textContent = '❌ Camera access failed. ' + err.message;
-                alert('Camera not accessible. Please check permissions or try another browser.');
-            });
+        navigator.mediaDevices.getUserMedia({
+            video: {
+                facingMode: { ideal: 'environment' }
+            }
+        }).then((stream) => {
+            video.srcObject = stream;
+            video.setAttribute('playsinline', true);
+            video.play();
+            requestAnimationFrame(tick);
+        }).catch((err) => {
+            console.error("Camera Error:", err);
+            alert("Camera access failed. Please check your browser permissions.");
+            statusText.textContent = '❌ Camera access failed.';
+        });
     }
 
     function tick() {
@@ -83,7 +90,7 @@ window.onload = function () {
                 inversionAttempts: 'dontInvert'
             });
             if (code) {
-                qrResult.textContent = `QR Code: ${code.data}`;
+                qrResult.textContent = `✅ QR Code: ${code.data}`;
                 window.location.href = code.data;
             } else {
                 requestAnimationFrame(tick);
@@ -106,10 +113,10 @@ window.onload = function () {
                 const imageData = canvas.getImageData(0, 0, img.width, img.height);
                 const code = jsQR(imageData.data, imageData.width, imageData.height);
                 if (code) {
-                    qrResult.textContent = `QR Code: ${code.data}`;
+                    qrResult.textContent = `✅ QR Code: ${code.data}`;
                     window.location.href = code.data;
                 } else {
-                    qrResult.textContent = 'No QR code found.';
+                    qrResult.textContent = '❌ No QR code found.';
                 }
             };
             img.src = reader.result;
