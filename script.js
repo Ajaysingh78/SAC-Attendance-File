@@ -8,8 +8,8 @@ window.onload = function () {
     const startBtn = document.getElementById('start-btn');
     const scannerSection = document.getElementById('scanner-section');
 
-    const collegeLatitude = 23.1854;
-    const collegeLongitude = 77.3271;
+    const collegeLatitude = 23.183830;
+    const collegeLongitude = 77.327452;
     const allowedDistanceKm = 0.2;
 
     function getDistanceKm(lat1, lon1, lat2, lon2) {
