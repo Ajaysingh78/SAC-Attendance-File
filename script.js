@@ -10,7 +10,41 @@ window.onload = function () {
 
     const collegeLatitude = 23.1854;
     const collegeLongitude = 77.3271;
-    const allowedDistanceKm = 0.5; // 500 meters
+    const allowedDistanceKm = 0.5;
+
+    const redirectParam = new URLSearchParams(window.location.search).get("redirect");
+
+    if (redirectParam) {
+        // 👇 Location check before redirecting
+        statusText.textContent = '📍 Checking your location...';
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const dist = getDistanceKm(
+                    position.coords.latitude,
+                    position.coords.longitude,
+                    collegeLatitude,
+                    collegeLongitude
+                );
+                if (dist <= allowedDistanceKm) {
+                    statusText.textContent = '✅ Inside campus. Redirecting...';
+                    window.location.href = decodeURIComponent(redirectParam);
+                } else {
+                    statusText.textContent = '❌ You are not inside the campus.';
+                    alert(`You are ${Math.round(dist * 1000)} meters away from campus. Access denied.`);
+                }
+            },
+            (error) => {
+                alert("❌ Location permission required to proceed.");
+                statusText.textContent = '❌ Location error.';
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 0
+            }
+        );
+        return;
+    }
 
     function getDistanceKm(lat1, lon1, lat2, lon2) {
         const R = 6371;
@@ -91,7 +125,7 @@ window.onload = function () {
             });
             if (code) {
                 qrResult.textContent = `✅ QR Code: ${code.data}`;
-                window.location.href = code.data;
+                window.location.href = `?redirect=${encodeURIComponent(code.data)}`;
             } else {
                 requestAnimationFrame(tick);
             }
@@ -114,7 +148,7 @@ window.onload = function () {
                 const code = jsQR(imageData.data, imageData.width, imageData.height);
                 if (code) {
                     qrResult.textContent = `✅ QR Code: ${code.data}`;
-                    window.location.href = code.data;
+                    window.location.href = `?redirect=${encodeURIComponent(code.data)}`;
                 } else {
                     qrResult.textContent = '❌ No QR code found.';
                 }
