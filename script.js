@@ -1,16 +1,5 @@
 // 👉 FIREBASE INITIALIZATION
-const firebaseConfig = {
-  apiKey: "AIzaSyDQKr_oCVkKhiMYYfD5M-UjOYGszQEYRPQ",
-  authDomain: "sac-attendance-9bdea.firebaseapp.com",
-  projectId: "sac-attendance-9bdea",
-  storageBucket: "sac-attendance-9bdea.appspot.com",
-  messagingSenderId: "924412411830",
-  appId: "1:924412411830:web:fe1bca9884744d3c3d0b17",
-  measurementId: "G-RT1X3R79ZE"
-};
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
 
 window.onload = function () {
     const video = document.getElementById('video');
