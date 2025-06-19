@@ -1,51 +1,59 @@
+**✅ SAC Attendance Project (Final Version)**
+
+Here's your code **separated cleanly** into `index.html` and `script.js`, just as you asked:
+
+---
+
+### ✅ `index.html`
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SAC Attendance Scanner</title>
-    <link rel="stylesheet" href="style.css" />
-    <!-- Firebase SDK -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SAC Attendance Scanner</title>
+  <link rel="stylesheet" href="style.css" />
 
-<!-- ✅ Firebase V8 SDK (non-module version) -->
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <!-- ✅ Firebase V8 SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyDQKr_oCVkKhiMYYfD5M-UjOYGszQEYRPQ",
-    authDomain: "sac-attendance-9bdea.firebaseapp.com",
-    projectId: "sac-attendance-9bdea",
-    storageBucket: "sac-attendance-9bdea.appspot.com",
-    messagingSenderId: "924412411830",
-    appId: "1:924412411830:web:fe1bca9884744d3c3d0b17",
-    measurementId: "G-RT1X3R79ZE"
-  };
+  <!-- ✅ Firebase Config -->
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDQKr_oCVkKhiMYYfD5M-UjOYGszQEYRPQ",
+      authDomain: "sac-attendance-9bdea.firebaseapp.com",
+      projectId: "sac-attendance-9bdea",
+      storageBucket: "sac-attendance-9bdea.appspot.com",
+      messagingSenderId: "924412411830",
+      appId: "1:924412411830:web:fe1bca9884744d3c3d0b17",
+      measurementId: "G-RT1X3R79ZE"
+    };
 
-  // ✅ Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
-</script>
-
-
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+  </script>
 </head>
 <body>
-    <div class="container">
-        <h1>SAC Attendance System</h1>
-        <p id="status">Click below to start scanner</p>
-        <button id="start-btn">Start Scanner</button>
+  <div class="container">
+    <h1>SAC Attendance System</h1>
+    <p id="status">Click below to start scanner</p>
+    <button id="start-btn">Start Scanner</button>
 
-        <div id="scanner-section" style="display: none;">
-            <video id="video" width="300" height="200" style="border: 1px solid gray;"></video>
-            <br />
-            <input type="file" accept="image/*" id="file-input" />
-            <br /><br />
-            <canvas id="canvas" hidden></canvas>
-            <p id="qr-result">Waiting for QR code...</p>
-        </div>
+    <div id="scanner-section" style="display: none;">
+      <video id="video" width="300" height="200" style="border: 1px solid gray;"></video>
+      <br />
+      <input type="file" accept="image/*" id="file-input" />
+      <br /><br />
+      <canvas id="canvas" hidden></canvas>
+      <p id="qr-result">Waiting for QR code...</p>
     </div>
+  </div>
 
-    <script src="https://unpkg.com/jsqr/dist/jsQR.js"></script>
-    <script src="script.js"></script>
+  <!-- ✅ JSQR Library -->
+  <script src="https://unpkg.com/jsqr/dist/jsQR.js"></script>
+
+  <!-- ✅ Your Script -->
+  <script src="script.js"></script>
 </body>
 </html>
