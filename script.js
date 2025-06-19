@@ -1,3 +1,17 @@
+// 👉 FIREBASE INITIALIZATION
+const firebaseConfig = {
+  apiKey: "AIzaSyDQKr_oCVkKhiMYYfD5M-UjOYGszQEYRPQ",
+  authDomain: "sac-attendance-9bdea.firebaseapp.com",
+  projectId: "sac-attendance-9bdea",
+  storageBucket: "sac-attendance-9bdea.appspot.com",
+  messagingSenderId: "924412411830",
+  appId: "1:924412411830:web:fe1bca9884744d3c3d0b17",
+  measurementId: "G-RT1X3R79ZE"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
 window.onload = function () {
     const video = document.getElementById('video');
     const canvasElement = document.getElementById('canvas');
@@ -114,6 +128,54 @@ window.onload = function () {
         });
     }
 
+    function getDeviceId() {
+        let id = localStorage.getItem("device_id");
+        if (!id) {
+            id = "dev-" + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem("device_id", id);
+        }
+        return id;
+    }
+
+    function extractEmailFromQR(url) {
+        try {
+            const params = new URLSearchParams(new URL(url).search);
+            return params.get("entry.123456"); // CHANGE this to your actual form field ID for email
+        } catch (e) {
+            return null;
+        }
+    }
+
+    function verifyDeviceAndRedirect(qrURL) {
+        const email = extractEmailFromQR(qrURL);
+        const deviceId = getDeviceId();
+
+        if (!email) {
+            alert("❌ Email not found in QR. Please check QR content.");
+            return;
+        }
+
+        db.collection("registrations").doc(email).get().then((docSnap) => {
+            if (!docSnap.exists) {
+                // First-time user: Register device
+                db.collection("registrations").doc(email).set({
+                    deviceId: deviceId,
+                    createdAt: Date.now()
+                }).then(() => {
+                    window.location.href = `?redirect=${encodeURIComponent(qrURL)}`;
+                });
+            } else {
+                const savedDevice = docSnap.data().deviceId;
+                if (savedDevice === deviceId) {
+                    window.location.href = `?redirect=${encodeURIComponent(qrURL)}`;
+                } else {
+                    alert("❌ Unauthorized Device! This email is already used on another device.");
+                    qrResult.textContent = "❌ Access denied: Device mismatch.";
+                }
+            }
+        });
+    }
+
     function tick() {
         if (video.readyState === video.HAVE_ENOUGH_DATA) {
             canvasElement.height = video.videoHeight;
@@ -125,7 +187,7 @@ window.onload = function () {
             });
             if (code) {
                 qrResult.textContent = `✅ QR Code: ${code.data}`;
-                window.location.href = `?redirect=${encodeURIComponent(code.data)}`;
+                verifyDeviceAndRedirect(code.data);
             } else {
                 requestAnimationFrame(tick);
             }
@@ -148,7 +210,7 @@ window.onload = function () {
                 const code = jsQR(imageData.data, imageData.width, imageData.height);
                 if (code) {
                     qrResult.textContent = `✅ QR Code: ${code.data}`;
-                    window.location.href = `?redirect=${encodeURIComponent(code.data)}`;
+                    verifyDeviceAndRedirect(code.data);
                 } else {
                     qrResult.textContent = '❌ No QR code found.';
                 }
