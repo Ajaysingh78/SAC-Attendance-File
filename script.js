@@ -109,7 +109,7 @@ window.onload = function () {
   function extractEmailFromQR(url) {
     try {
       const params = new URLSearchParams(new URL(url).search);
-      return params.get("entry.123456"); // 🔁 Replace this with actual Google Form field ID for email
+      return params.get("entry.877086558"); // 🔁 Replace this with actual Google Form field ID for email
     } catch (e) {
       return null;
     }
