@@ -1,4 +1,3 @@
-
 window.onload = function () {
   const video = document.getElementById('video');
   const canvasElement = document.getElementById('canvas');
@@ -8,6 +7,8 @@ window.onload = function () {
   const qrResult = document.getElementById('qr-result');
   const startBtn = document.getElementById('start-btn');
   const scannerSection = document.getElementById('scanner-section');
+  const toggleBtn = document.getElementById("menu-toggle");
+  const navLinks = document.getElementById("nav-links");
 
   const collegeLatitude = 23.1854;
   const collegeLongitude = 77.3271;
@@ -15,6 +16,19 @@ window.onload = function () {
 
   const redirectParam = new URLSearchParams(window.location.search).get("redirect");
 
+  // 🔹 Toggle Hamburger Menu
+  toggleBtn.addEventListener("click", () => {
+    navLinks.classList.toggle("show");
+  });
+
+  // 🔹 Auto-close nav on link click (optional enhancement)
+  document.querySelectorAll(".nav-links a").forEach(link => {
+    link.addEventListener("click", () => {
+      navLinks.classList.remove("show");
+    });
+  });
+
+  // 🔹 If redirected
   if (redirectParam) {
     statusText.textContent = '📍 Checking your location...';
     navigator.geolocation.getCurrentPosition(
@@ -46,6 +60,7 @@ window.onload = function () {
     return;
   }
 
+  // 🔹 Distance calculation
   function getDistanceKm(lat1, lon1, lat2, lon2) {
     const R = 6371;
     const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -58,6 +73,7 @@ window.onload = function () {
     return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   }
 
+  // 🔹 Start Button Click
   startBtn.addEventListener('click', () => {
     statusText.textContent = '📍 Checking your location...';
     if (!navigator.geolocation) {
@@ -96,8 +112,8 @@ window.onload = function () {
       }
     );
   });
-  
 
+  // 🔹 Device ID
   function getDeviceId() {
     let id = localStorage.getItem("device_id");
     if (!id) {
@@ -107,15 +123,17 @@ window.onload = function () {
     return id;
   }
 
+  // 🔹 QR Email Extraction
   function extractEmailFromQR(url) {
     try {
       const params = new URLSearchParams(new URL(url).search);
-      return params.get("entry.877086558"); // 🔁 Replace this with actual Google Form field ID for email
+      return params.get("entry.877086558"); // 🛠 Replace with your form's email field ID
     } catch (e) {
       return null;
     }
   }
 
+  // 🔹 Verify Device
   function verifyDeviceAndRedirect(qrURL) {
     const email = extractEmailFromQR(qrURL);
     const deviceId = getDeviceId();
@@ -145,6 +163,7 @@ window.onload = function () {
     });
   }
 
+  // 🔹 Start Scanner
   function startScanner() {
     navigator.mediaDevices.getUserMedia({
       video: {
@@ -162,6 +181,7 @@ window.onload = function () {
     });
   }
 
+  // 🔹 QR Detection
   function tick() {
     if (video.readyState === video.HAVE_ENOUGH_DATA) {
       canvasElement.height = video.videoHeight;
@@ -181,13 +201,8 @@ window.onload = function () {
       requestAnimationFrame(tick);
     }
   }
-  const toggleBtn = document.getElementById("menu-toggle");
-  const navLinks = document.getElementById("nav-links");
 
-   toggleBtn.addEventListener("click", () => {
-    navLinks.classList.toggle("show");
-     });
-
+  // 🔹 File Upload QR
   fileInput.addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (!file) return;
