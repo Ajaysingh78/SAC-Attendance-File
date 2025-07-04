@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SAC Attendance Scanner</title>
-  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
@@ -12,11 +11,10 @@
   <nav class="navbar">
     <div class="nav-left">
       <img src="logo.png" alt="College Logo" class="logo" />
-      <span class="nav-title">
-        <h2>IES College Of Technology Bhopal Madhya Pradesh</h2>
-      </span>
+      <h2 class="nav-title">IES College Of Technology Bhopal Madhya Pradesh</h2>
     </div>
-    <ul class="nav-links">
+    <button class="menu-toggle" id="menu-toggle">&#9776;</button>
+    <ul class="nav-links" id="nav-links">
       <li><a href="#home">Home</a></li>
       <li><a href="#guidelines">About</a></li>
     </ul>
@@ -30,7 +28,7 @@
       <button id="start-btn">Start Scanner</button>
 
       <div id="scanner-section" style="display: none;">
-        <video id="video" width="300" height="200" style="border: 1px solid gray;"></video>
+        <video id="video" width="300" height="200"></video>
         <br />
         <input type="file" accept="image/*" id="file-input" />
         <br /><br />
@@ -50,9 +48,9 @@
       <h3> What is SAC Attendance System?</h3>
       <p>The SAC Attendance System is a <strong>QR-based smart attendance portal</strong> developed to ensure:</p>
       <ul>
-        <li><strong>Location-restricted submissions</strong> (only from inside college)</li>
-        <li><strong>Device-lock mechanism</strong> (each student can submit only from their own device)</li>
-        <li><strong>Security against misuse</strong> (no proxy attendance possible)</li>
+        <li><strong>Location-restricted submissions</strong></li>
+        <li><strong>Device-lock mechanism</strong></li>
+        <li><strong>Security against misuse</strong></li>
       </ul>
     </div>
 
@@ -61,7 +59,7 @@
       <ul>
         <li>All registered students of SAC.</li>
         <li>Only students whose emails are registered in the system can successfully submit attendance.</li>
-        <li>First-time users must scan their QR code using this website (not using third-party QR scanners).</li>
+        <li>First-time users must scan their QR code using this website.</li>
       </ul>
     </div>
 
@@ -70,33 +68,24 @@
       <ul>
         <li>A valid QR code generated specifically for you.</li>
         <li>Enable location permission in your browser.</li>
-        <li>Use your personal device only. Your attendance is locked to it.</li>
-        <li>Don't use any third-party QR scanner app – only use this official SAC portal.</li>
+        <li>Use your personal device only.</li>
+        <li>Don't use any third-party QR scanner app.</li>
       </ul>
     </div>
 
     <div class="div4 divs">
       <h3>🚀 How to Submit Attendance (Step-by-Step)</h3>
-      <p>Follow these simple steps every time you mark your attendance:</p>
-
       <h4>Step 1️ – Open Website</h4>
       <p>Visit: <a href="https://ajaysingh78.github.io/SAC-Attendance-File/" target="_blank">Click here</a></p>
-
       <h4>Step 2️ – Click “Start Scanner”</h4>
-      <p>This activates the in-browser QR scanner and checks your live location.</p>
-
       <h4>Step 3️ – Allow Location Access</h4>
-      <p>Make sure your device grants location access when prompted. You must be within the college campus to proceed.</p>
-
       <h4>Step 4️ – Scan Your QR Code</h4>
-      <p>Scan your personal QR code provided to you by the admin. The QR will open your prefilled Google Form link only if:</p>
       <ul>
         <li>✅ You are inside the campus.</li>
         <li>✅ You are using your registered device.</li>
       </ul>
-
       <h4>Step 5️ – Form Opens Automatically</h4>
-      <p>Once verified, the Google Form will open. Click "Submit" – your attendance is now recorded.</p>
+      <p>Click "Submit" – your attendance is now recorded.</p>
     </div>
 
     <div class="div5 divs">
@@ -104,24 +93,24 @@
       <ul>
         <li><strong>No Proxy:</strong> Device-lock ensures one student cannot use another’s QR.</li>
         <li><strong>Location-Based Access:</strong> Form opens only inside campus boundaries.</li>
-        <li><strong>One-Time Device Registration:</strong> Once a device is registered with your email, others can't misuse your QR.</li>
+        <li><strong>One-Time Device Registration:</strong> Others can't misuse your QR.</li>
       </ul>
     </div>
 
     <div class="div6 divs">
       <h3> 📌FAQs</h3>
-      <p><strong>Q:</strong> Can I scan QR using phone’s camera or a QR app?<br>
-        <strong>A:</strong> No. That will just open the form link without validation. Always scan using this website.</p>
+      <p><strong>Q:</strong> Can I scan QR using phone’s camera or app?<br>
+        <strong>A:</strong> No. Always scan using this website.</p>
       <p><strong>Q:</strong> What if I change my phone?<br>
-        <strong>A:</strong> Contact the admin to reset your device registration.</p>
+        <strong>A:</strong> Contact the admin.</p>
       <p><strong>Q:</strong> What happens if I’m outside college?<br>
-        <strong>A:</strong> The system blocks attendance if you're not within allowed GPS range.</p>
-      <p><strong>Q:</strong> What should I do if I'm unable to submit my attendance?<br>
-        <strong>A:</strong> If you face any issues while using the attendance system, please contact <strong>Ajay Rathore</strong> directly at <strong>Mo.No.-7869264519</strong> for immediate help.</p>
+        <strong>A:</strong> The system blocks attendance.</p>
+      <p><strong>Q:</strong> What should I do if I'm unable to submit?<br>
+        <strong>A:</strong> Contact <strong>Ajay Rathore</strong> at <strong>7869264519</strong>.</p>
     </div>
   </section>
 
-  <!-- Scripts -->
+  <!-- Script Links -->
   <script src="https://unpkg.com/jsqr/dist/jsQR.js"></script>
   <script src="script.js"></script>
 </body>
