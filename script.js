@@ -97,12 +97,6 @@ window.onload = function () {
     );
   });
   
-  const toggleBtn = document.getElementById("menu-toggle");
-  const navLinks = document.getElementById("nav-links");
-
-   toggleBtn.addEventListener("click", () => {
-    navLinks.classList.toggle("show");
-});
 
   function getDeviceId() {
     let id = localStorage.getItem("device_id");
@@ -187,6 +181,12 @@ window.onload = function () {
       requestAnimationFrame(tick);
     }
   }
+  const toggleBtn = document.getElementById("menu-toggle");
+  const navLinks = document.getElementById("nav-links");
+
+   toggleBtn.addEventListener("click", () => {
+    navLinks.classList.toggle("show");
+     });
 
   fileInput.addEventListener('change', (e) => {
     const file = e.target.files[0];
