@@ -31,7 +31,7 @@ body {
   z-index: 1000;
 }
 
-/* Left part: logo and title */
+/* Left: logo + title */
 .nav-left {
   display: flex;
   align-items: center;
@@ -184,25 +184,30 @@ input[type="file"] {
 
 .head {
   background: linear-gradient(135deg, #8b949d, #5e6c6c);
+  padding: 10px 0;
 }
 
 /* ------------------------ */
 /* ✅ Mobile Responsive Fix */
 /* ------------------------ */
 @media (max-width: 768px) {
+  body {
+    font-size: 15px;
+  }
+
   .navbar {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 10px 20px;
-    position: relative;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
   }
 
   .nav-left {
-    width: 100%;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    gap: 6px; /* ✅ Fix: reduced gap to prevent overflow */
+    gap: 10px;
+    max-width: 85%;
+    overflow: hidden;
   }
 
   .logo {
@@ -212,7 +217,7 @@ input[type="file"] {
 
   .nav-title {
     font-size: 15px;
-    max-width: 70%;
+    max-width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -220,10 +225,7 @@ input[type="file"] {
 
   .hamburger {
     display: block;
-    position: absolute;
-    top: 14px;
-    right: 16px;
-    font-size: 24px;
+    font-size: 26px;
     cursor: pointer;
     color: #000;
     z-index: 1100;
@@ -255,6 +257,8 @@ input[type="file"] {
 
   .guidelines {
     grid-template-columns: 1fr;
+    padding: 10px;
+    gap: 15px;
   }
 
   .container {
@@ -278,5 +282,17 @@ input[type="file"] {
   #video {
     width: 100% !important;
     height: auto !important;
+  }
+
+  #qr-result {
+    margin-top: 15px;
+    font-size: 14px;
+    text-align: center;
+  }
+
+  #scanner-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 }
