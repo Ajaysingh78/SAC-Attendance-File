@@ -1,4 +1,3 @@
-/* Reset */
 * {
   margin: 0;
   padding: 0;
@@ -27,10 +26,11 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
+  padding: 8px 20px;
   z-index: 1000;
 }
 
+/* Left part: logo and title in one row */
 .nav-left {
   display: flex;
   align-items: center;
@@ -54,7 +54,7 @@ body {
   list-style: none;
   display: flex;
   gap: 30px;
-  margin-right: 20px;
+  margin-right: 40px; /* ✅ Fix: Moves Home & About slightly left */
 }
 
 .nav-links a {
@@ -69,7 +69,7 @@ body {
   color: #00f2fe;
 }
 
-/* Hamburger Icon */
+/* Hamburger icon */
 .hamburger {
   display: none;
   font-size: 28px;
@@ -77,12 +77,191 @@ body {
   color: #000;
 }
 
-/* ========== MOBILE RESPONSIVE NAVBAR ========== */
+/* MOBILE VIEW */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .hamburger {
+    display: block;
+    position: absolute;
+    top: 16px;
+    right: 20px; /* ✅ Hamburger menu on top-right */
+    z-index: 1100;
+  }
+
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.97);
+    padding: 20px 10px;
+    position: absolute;
+    top: 65px;
+    left: 0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .nav-links.show {
+    display: flex;
+  }
+
+  .nav-links a {
+    color: #000;
+    font-size: 18px;
+    padding: 10px 0;
+  }
+
+  .nav-title {
+    font-size: 16px;
+  }
+}
+
+/* Hamburger Icon */
+.hamburger {
+  display: none;
+  font-size: 26px;
+  cursor: pointer;
+  color: #000;
+}
+
+/* Main */
+.main {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 80px;
+  position: relative;
+}
+
+.main::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(0px);
+  z-index: 1;
+}
+
+.container {
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  border-radius: 20px;
+  padding: 30px 20px;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  color: #fff;
+  width: 90%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* Typography */
+h1 {
+  font-size: 26px;
+  color: #ffffff;
+  margin-bottom: 20px;
+  text-shadow: 0 0 8px #00f2fe;
+}
+
+#status {
+  color: #e0e0e0;
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+
+#qr-result {
+  color: #a5ffb5;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+#start-btn {
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#start-btn:hover {
+  background: linear-gradient(135deg, #00f2fe, #4facfe);
+  transform: scale(1.05);
+}
+
+input[type="file"] {
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.6);
+  border-radius: 8px;
+  border: none;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #000;
+}
+
+/* Guidelines */
+.guidelines {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 0px;
+  width: 100%;
+  background: rgba(17, 17, 17, 0.6);
+  backdrop-filter: blur(2px);
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.divs {
+  background-color: #07070783;
+  text-align: left;
+  padding: 20px;
+  font-weight: normal;
+  border: 2px solid #d3d2d2;
+  color: #f1eded;
+  border-radius: 10px;
+  height: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.head {
+  background: linear-gradient(135deg, #8b949d, #5e6c6c);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .guidelines {
+    grid-template-columns: 1fr;
+  }
+
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 16px;
+  }
+
+  .nav-left {
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+  }
+  /* Hamburger Icon */
 @media (max-width: 768px) {
   .navbar {
     flex-direction: column;
     align-items: flex-start;
     padding: 10px 20px;
+    position: relative;
   }
 
   .nav-left {
@@ -99,18 +278,19 @@ body {
     right: 20px;
     font-size: 26px;
     cursor: pointer;
+    color: #000;
     z-index: 1100;
   }
 
   .nav-links {
     display: none;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
     width: 100%;
-    background-color: rgba(255, 255, 255, 0.97);
+    background-color: rgba(255, 255, 255, 0.95);
     padding: 20px 10px;
     position: absolute;
-    top: 65px;
+    top: 60px;
     left: 0;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     z-index: 999;
@@ -122,5 +302,31 @@ body {
 
   .nav-title {
     font-size: 16px;
+  }
+}
+
+
+ 
+  .container {
+    width: 95%;
+    margin: 0 auto;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  .divs {
+    padding: 15px;
+    font-size: 14px;
+  }
+
+  input[type="file"] {
+    width: 100%;
+  }
+
+  #video {
+    width: 100% !important;
+    height: auto !important;
   }
 }
