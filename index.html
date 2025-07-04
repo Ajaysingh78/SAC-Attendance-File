@@ -2,26 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>SAC Attendance Scanner</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
- <nav class="navbar">
-  <div class="nav-left">
-    <img src="logo.png" alt="College Logo" class="logo" />
-    <h2 class="nav-title">IES College Of Technology</h2>
-  </div>
+  <nav class="navbar">
+    <div class="nav-left">
+      <img src="logo.png" alt="College Logo" class="logo" />
+      <h2 class="nav-title">IES College Of Technology</h2>
+    </div>
 
-  <!-- Hamburger icon -->
-  <div class="hamburger" id="menu-toggle">&#9776;</div>
+    <!-- Hamburger icon -->
+    <div class="hamburger" id="menu-toggle">&#9776;</div>
 
-  <ul class="nav-links" id="nav-links">
-    <li><a href="#home">Home</a></li>
-    <li><a href="#guidelines">About</a></li>
-  </ul>
-</nav>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#guidelines">About</a></li>
+    </ul>
+  </nav>
+
   <!-- Main Section -->
   <div class="main" id="home">
     <div class="container">
@@ -47,7 +48,7 @@
 
   <section id="guidelines" class="guidelines">
     <div class="div1 divs">
-      <h3> What is SAC Attendance System?</h3>
+      <h3>What is SAC Attendance System?</h3>
       <p>The SAC Attendance System is a <strong>QR-based smart attendance portal</strong> developed to ensure:</p>
       <ul>
         <li><strong>Location-restricted submissions</strong></li>
@@ -100,7 +101,7 @@
     </div>
 
     <div class="div6 divs">
-      <h3> 📌FAQs</h3>
+      <h3>📌 FAQs</h3>
       <p><strong>Q:</strong> Can I scan QR using phone’s camera or app?<br>
         <strong>A:</strong> No. Always scan using this website.</p>
       <p><strong>Q:</strong> What if I change my phone?<br>
@@ -112,8 +113,11 @@
     </div>
   </section>
 
-  <!-- Script Links -->
+  <!-- External Scripts -->
   <script src="https://unpkg.com/jsqr/dist/jsQR.js"></script>
   <script src="script.js"></script>
+
+
+
 </body>
 </html>
