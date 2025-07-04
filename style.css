@@ -80,16 +80,36 @@ body {
 /* MOBILE VIEW */
 @media (max-width: 768px) {
   .navbar {
-    flex-direction: row;
-    flex-wrap: wrap;
+    flex-direction: column;
     align-items: flex-start;
+    padding: 10px 20px;
+    position: relative;
+  }
+
+  .nav-left {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px; /* ✅ Gap kam kiya */
+    justify-content: space-between;
+  }
+
+  .nav-title {
+    font-size: 16px;
+    max-width: 70%; /* ✅ Yeh lagaya title ko prevent karne ke liye wrap ya overlap se */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .hamburger {
     display: block;
     position: absolute;
     top: 16px;
-    right: 20px; /* ✅ Hamburger menu on top-right */
+    right: 20px;
+    font-size: 26px;
+    cursor: pointer;
+    color: #000;
     z-index: 1100;
   }
 
@@ -98,17 +118,20 @@ body {
     flex-direction: column;
     gap: 10px;
     width: 100%;
-    background-color: rgba(255, 255, 255, 0.97);
+    background-color: rgba(255, 255, 255, 0.95);
     padding: 20px 10px;
     position: absolute;
-    top: 65px;
+    top: 60px;
     left: 0;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 999;
   }
 
   .nav-links.show {
     display: flex;
   }
+}
+
 
   .nav-links a {
     color: #000;
