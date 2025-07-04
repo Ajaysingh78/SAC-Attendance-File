@@ -1,3 +1,4 @@
+/* Reset */
 * {
   margin: 0;
   padding: 0;
@@ -30,7 +31,7 @@ body {
   z-index: 1000;
 }
 
-/* Left part: logo and title in one row */
+/* Left part: logo and title */
 .nav-left {
   display: flex;
   align-items: center;
@@ -54,7 +55,7 @@ body {
   list-style: none;
   display: flex;
   gap: 30px;
-  margin-right: 40px; /* ✅ Fix: Moves Home & About slightly left */
+  margin-right: 40px;
 }
 
 .nav-links a {
@@ -69,85 +70,10 @@ body {
   color: #00f2fe;
 }
 
-/* Hamburger icon */
+/* Hamburger */
 .hamburger {
   display: none;
   font-size: 28px;
-  cursor: pointer;
-  color: #000;
-}
-
-/* MOBILE VIEW */
-@media (max-width: 768px) {
-  .navbar {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 10px 20px;
-    position: relative;
-  }
-
-  .nav-left {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 8px; /* ✅ Gap kam kiya */
-    justify-content: space-between;
-  }
-
-  .nav-title {
-    font-size: 16px;
-    max-width: 70%; /* ✅ Yeh lagaya title ko prevent karne ke liye wrap ya overlap se */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .hamburger {
-    display: block;
-    position: absolute;
-    top: 16px;
-    right: 20px;
-    font-size: 26px;
-    cursor: pointer;
-    color: #000;
-    z-index: 1100;
-  }
-
-  .nav-links {
-    display: none;
-    flex-direction: column;
-    gap: 10px;
-    width: 100%;
-    background-color: rgba(255, 255, 255, 0.95);
-    padding: 20px 10px;
-    position: absolute;
-    top: 60px;
-    left: 0;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    z-index: 999;
-  }
-
-  .nav-links.show {
-    display: flex;
-  }
-}
-
-
-  .nav-links a {
-    color: #000;
-    font-size: 18px;
-    padding: 10px 0;
-  }
-
-  .nav-title {
-    font-size: 16px;
-  }
-}
-
-/* Hamburger Icon */
-.hamburger {
-  display: none;
-  font-size: 26px;
   cursor: pointer;
   color: #000;
 }
@@ -260,25 +186,9 @@ input[type="file"] {
   background: linear-gradient(135deg, #8b949d, #5e6c6c);
 }
 
-/* Mobile Responsive */
-@media (max-width: 768px) {
-  .guidelines {
-    grid-template-columns: 1fr;
-  }
-
-  .navbar {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 10px 16px;
-  }
-
-  .nav-left {
-    flex-direction: row;
-    width: 100%;
-    justify-content: space-between;
-    align-items: center;
-  }
-  /* Hamburger Icon */
+/* ------------------------ */
+/* ✅ Mobile Responsive Fix */
+/* ------------------------ */
 @media (max-width: 768px) {
   .navbar {
     flex-direction: column;
@@ -292,14 +202,28 @@ input[type="file"] {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 6px; /* ✅ Fix: reduced gap to prevent overflow */
+  }
+
+  .logo {
+    height: 40px;
+    width: auto;
+  }
+
+  .nav-title {
+    font-size: 15px;
+    max-width: 70%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .hamburger {
     display: block;
     position: absolute;
-    top: 16px;
-    right: 20px;
-    font-size: 26px;
+    top: 14px;
+    right: 16px;
+    font-size: 24px;
     cursor: pointer;
     color: #000;
     z-index: 1100;
@@ -323,13 +247,16 @@ input[type="file"] {
     display: flex;
   }
 
-  .nav-title {
-    font-size: 16px;
+  .nav-links a {
+    color: #000;
+    font-size: 18px;
+    padding: 10px 0;
   }
-}
 
+  .guidelines {
+    grid-template-columns: 1fr;
+  }
 
- 
   .container {
     width: 95%;
     margin: 0 auto;
