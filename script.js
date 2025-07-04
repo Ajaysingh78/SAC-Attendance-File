@@ -96,12 +96,11 @@ window.onload = function () {
       }
     );
   });
-    const toggleBtn = document.getElementById("menu-toggle");
+  const toggleBtn = document.getElementById("menu-toggle");
   const navLinks = document.getElementById("nav-links");
 
   toggleBtn.addEventListener("click", () => {
     navLinks.classList.toggle("show");
-  });
 
   function getDeviceId() {
     let id = localStorage.getItem("device_id");
