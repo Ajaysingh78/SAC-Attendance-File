@@ -129,14 +129,18 @@ function extractEmailFromQR(url) {
   try {
     const params = new URLSearchParams(new URL(url).search);
 
-    // try the exact field that stores email first
-    const possibleKeys = ['entry.1361914762', 'entry.877086558', 'email']; 
+    // sabse pehle tumhare form ka exact field check karna hai
+    const email = params.get("entry.1361914762"); 
+    if (email) return decodeURIComponent(email).trim().toLowerCase();
+
+    // fallback agar wo field na mile
+    const possibleKeys = ['entry.877086558', 'email'];
     for (const k of possibleKeys) {
       const v = params.get(k);
       if (v) return decodeURIComponent(v).trim().toLowerCase();
     }
 
-    // fallback: find an email anywhere in the URL (best-effort)
+    // regex fallback
     const match = url.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
     return match ? match[0].toLowerCase() : null;
   } catch (e) {
@@ -239,4 +243,5 @@ function extractEmailFromQR(url) {
     reader.readAsDataURL(file);
   });
 };
+
 
