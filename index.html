@@ -2,122 +2,147 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>SAC Attendance Scanner</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SAC Attendance</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background: #f5f6fa;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 20px;
+      color: #2d3436;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #dcdde1;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #0984e3;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover {
+      background: #74b9ff;
+    }
+    .msg {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
-
-  <nav class="navbar">
-    <div class="nav-left">
-      <img src="logo.png" alt="College Logo" class="logo" />
-      <h2 class="nav-title">IES College Of Technology</h2>
-    </div>
-
-    <!-- Hamburger icon -->
-    <div class="hamburger" id="menu-toggle">&#9776;</div>
-
-    <ul class="nav-links" id="nav-links">
-      <li><a href="#home">Home</a></li>
-      <li><a href="#guidelines">About</a></li>
-    </ul>
-  </nav>
-
-  <!-- Main Section -->
-  <div class="main" id="home">
-    <div class="container">
-      <h1>ICOT-SAC Attendance System</h1>
-      <p id="status">Click below to start scanner</p>
-      <button id="start-btn">Start Scanner</button>
-
-      <div id="scanner-section" style="display: none;">
-        <video id="video" width="300" height="200"></video>
-        <br />
-        <input type="file" accept="image/*" id="file-input" />
-        <br /><br />
-        <canvas id="canvas" hidden></canvas>
-        <p id="qr-result">Waiting for QR code...</p>
-      </div>
-    </div>
+  <div class="container">
+    <h2>📍 SAC Attendance</h2>
+    <input type="text" id="studentName" placeholder="Enter your name" required />
+    <button id="markAttendance">Mark Attendance</button>
+    <div class="msg" id="msg"></div>
   </div>
 
-  <!-- Guidelines Section -->
-  <div class="head">
-    <center><b><h2>--------------Guidelines--------------</h2></b></center>
-  </div>
+  <script type="module">
+    // Import Firebase SDK
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
-  <section id="guidelines" class="guidelines">
-    <div class="div1 divs">
-      <h3>What is SAC Attendance System?</h3>
-      <p>The SAC Attendance System is a <strong>QR-based smart attendance portal</strong> developed to ensure:</p>
-      <ul>
-        <li><strong>Location-restricted submissions</strong></li>
-        <li><strong>Device-lock mechanism</strong></li>
-        <li><strong>Security against misuse</strong></li>
-      </ul>
-    </div>
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyCVEcJFjpRMY9YouacrgpGAbjqaM747j1A",
+      authDomain: "sac-attendance-cbfaa.firebaseapp.com",
+      projectId: "sac-attendance-cbfaa",
+      storageBucket: "sac-attendance-cbfaa.firebasestorage.app",
+      messagingSenderId: "198490480874",
+      appId: "1:198490480874:web:d6f880e257e884d63a3793"
+    };
 
-    <div class="div2 divs">
-      <h3>📌 Who Can Use This System?</h3>
-      <ul>
-        <li>All registered students of SAC.</li>
-        <li>Only students whose emails are registered in the system can successfully submit attendance.</li>
-        <li>First-time users must scan their QR code using this website.</li>
-      </ul>
-    </div>
+    // Init Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-    <div class="div3 divs">
-      <h3>🛠️ Requirements Before Use</h3>
-      <ul>
-        <li>A valid QR code generated specifically for you.</li>
-        <li>Enable location permission in your browser.</li>
-        <li>Use your personal device only.</li>
-        <li>Don't use any third-party QR scanner app.</li>
-      </ul>
-    </div>
+    // College Location (latitude, longitude)
+    const COLLEGE_LAT = 22.1762;  
+    const COLLEGE_LNG = 75.5630;  
+    const MAX_DISTANCE = 0.3; // KM
 
-    <div class="div4 divs">
-      <h3>🚀 How to Submit Attendance (Step-by-Step)</h3>
-      <h4>Step 1️ – Open Website</h4>
-      <p>Visit: <a href="https://ajaysingh78.github.io/SAC-Attendance-File/" target="_blank">Click here</a></p>
-      <h4>Step 2️ – Click “Start Scanner”</h4>
-      <h4>Step 3️ – Allow Location Access</h4>
-      <h4>Step 4️ – Scan Your QR Code</h4>
-      <ul>
-        <li>✅ You are inside the campus.</li>
-        <li>✅ You are using your registered device.</li>
-      </ul>
-      <h4>Step 5️ – Form Opens Automatically</h4>
-      <p>Click "Submit" – your attendance is now recorded.</p>
-    </div>
+    // Function to calculate distance (Haversine formula)
+    function getDistance(lat1, lon1, lat2, lon2) {
+      const R = 6371; // km
+      const dLat = (lat2-lat1) * Math.PI/180;
+      const dLon = (lon2-lon1) * Math.PI/180;
+      const a = 
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) *
+        Math.sin(dLon/2) * Math.sin(dLon/2); 
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+      return R * c;
+    }
 
-    <div class="div5 divs">
-      <h3>🔐 Important Security Features</h3>
-      <ul>
-        <li><strong>No Proxy:</strong> Device-lock ensures one student cannot use another’s QR.</li>
-        <li><strong>Location-Based Access:</strong> Form opens only inside campus boundaries.</li>
-        <li><strong>One-Time Device Registration:</strong> Others can't misuse your QR.</li>
-      </ul>
-    </div>
+    // Mark attendance
+    document.getElementById("markAttendance").addEventListener("click", () => {
+      const name = document.getElementById("studentName").value.trim();
+      const msg = document.getElementById("msg");
 
-    <div class="div6 divs">
-      <h3>📌 FAQs</h3>
-      <p><strong>Q:</strong> Can I scan QR using phone’s camera or app?<br>
-        <strong>A:</strong> No. Always scan using this website.</p>
-      <p><strong>Q:</strong> What if I change my phone?<br>
-        <strong>A:</strong> Contact the admin.</p>
-      <p><strong>Q:</strong> What happens if I’m outside college?<br>
-        <strong>A:</strong> The system blocks attendance.</p>
-      <p><strong>Q:</strong> What should I do if I'm unable to submit?<br>
-        <strong>A:</strong> Contact <strong>Ajay Rathore</strong> at <strong>7869264519</strong>.</p>
-    </div>
-  </section>
+      if (!name) {
+        msg.innerText = "⚠️ Please enter your name!";
+        msg.style.color = "red";
+        return;
+      }
 
-  <!-- External Scripts -->
-  <script src="https://unpkg.com/jsqr/dist/jsQR.js"></script>
-  <script src="script.js"></script>
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(async (pos) => {
+          const lat = pos.coords.latitude;
+          const lng = pos.coords.longitude;
 
+          const distance = getDistance(lat, lng, COLLEGE_LAT, COLLEGE_LNG);
 
-
+          if (distance <= MAX_DISTANCE) {
+            try {
+              await addDoc(collection(db, "attendance"), {
+                name: name,
+                timestamp: new Date(),
+                latitude: lat,
+                longitude: lng
+              });
+              msg.innerText = "✅ Attendance marked successfully!";
+              msg.style.color = "green";
+            } catch (error) {
+              msg.innerText = "❌ Error saving attendance!";
+              msg.style.color = "red";
+              console.error(error);
+            }
+          } else {
+            msg.innerText = "📍 You must be inside college to mark attendance!";
+            msg.style.color = "red";
+          }
+        });
+      } else {
+        msg.innerText = "❌ Location not supported!";
+        msg.style.color = "red";
+      }
+    });
+  </script>
 </body>
 </html>
