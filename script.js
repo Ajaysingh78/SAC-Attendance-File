@@ -149,6 +149,7 @@ function extractEmailFromQR(url) {
 }
 
 
+
   // 🔹 Verify Device
   function verifyDeviceAndRedirect(qrURL) {
     const email = extractEmailFromQR(qrURL);
@@ -243,5 +244,6 @@ function extractEmailFromQR(url) {
     reader.readAsDataURL(file);
   });
 };
+
 
 
