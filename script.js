@@ -124,14 +124,26 @@ window.onload = function () {
   }
 
   // 🔹 QR Email Extraction
-  function extractEmailFromQR(url) {
-    try {
-      const params = new URLSearchParams(new URL(url).search);
-      return params.get("entry.877086558"); // 🛠 Replace with your form's email field ID
-    } catch (e) {
-      return null;
+// Replace your current extractEmailFromQR with this improved version
+function extractEmailFromQR(url) {
+  try {
+    const params = new URLSearchParams(new URL(url).search);
+
+    // try the exact field that stores email first
+    const possibleKeys = ['entry.1361914762', 'entry.877086558', 'email']; 
+    for (const k of possibleKeys) {
+      const v = params.get(k);
+      if (v) return decodeURIComponent(v).trim().toLowerCase();
     }
+
+    // fallback: find an email anywhere in the URL (best-effort)
+    const match = url.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
+    return match ? match[0].toLowerCase() : null;
+  } catch (e) {
+    return null;
   }
+}
+
 
   // 🔹 Verify Device
   function verifyDeviceAndRedirect(qrURL) {
@@ -227,3 +239,4 @@ window.onload = function () {
     reader.readAsDataURL(file);
   });
 };
+
