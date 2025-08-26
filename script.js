@@ -21,14 +21,13 @@ window.onload = function () {
     navLinks.classList.toggle("show");
   });
 
-  // 🔹 Auto-close nav on link click (optional enhancement)
   document.querySelectorAll(".nav-links a").forEach(link => {
     link.addEventListener("click", () => {
       navLinks.classList.remove("show");
     });
   });
 
-  // 🔹 If redirected
+  // 🔹 If redirected (location check)
   if (redirectParam) {
     statusText.textContent = '📍 Checking your location...';
     navigator.geolocation.getCurrentPosition(
@@ -41,6 +40,7 @@ window.onload = function () {
         );
         if (dist <= allowedDistanceKm) {
           statusText.textContent = '✅ Inside campus. Redirecting...';
+          console.log("Redirecting to:", decodeURIComponent(redirectParam));
           window.location.href = decodeURIComponent(redirectParam);
         } else {
           statusText.textContent = '❌ You are not inside the campus.';
@@ -51,11 +51,7 @@ window.onload = function () {
         alert("❌ Location permission required to proceed.");
         statusText.textContent = '❌ Location error.';
       },
-      {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 0
-      }
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
     );
     return;
   }
@@ -73,7 +69,7 @@ window.onload = function () {
     return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   }
 
-  // 🔹 Start Button Click
+  // 🔹 Start Button
   startBtn.addEventListener('click', () => {
     statusText.textContent = '📍 Checking your location...';
     if (!navigator.geolocation) {
@@ -105,11 +101,7 @@ window.onload = function () {
         alert("Location permission is required. Please allow location and refresh the page.");
         statusText.textContent = '❌ Location permission denied.';
       },
-      {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 0
-      }
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
     );
   });
 
@@ -123,69 +115,71 @@ window.onload = function () {
     return id;
   }
 
-  // 🔹 QR Email Extraction
-// Replace your current extractEmailFromQR with this improved version
-function extractEmailFromQR(url) {
-  try {
-    const params = new URLSearchParams(new URL(url).search);
-
-    // sabse pehle tumhare form ka exact field check karna hai
-    const email = params.get("entry.1361914762"); 
-    if (email) return decodeURIComponent(email).trim().toLowerCase();
-
-    // fallback agar wo field na mile
-    const possibleKeys = ['entry.877086558', 'email'];
-    for (const k of possibleKeys) {
-      const v = params.get(k);
-      if (v) return decodeURIComponent(v).trim().toLowerCase();
+  // 🔹 Extract Email from QR (for device check)
+  function extractEmailFromQR(url) {
+    try {
+      const params = new URLSearchParams(new URL(url).search);
+      const email = params.get("entry.1361914762"); 
+      if (email) return decodeURIComponent(email).trim().toLowerCase();
+      const possibleKeys = ['entry.877086558', 'email'];
+      for (const k of possibleKeys) {
+        const v = params.get(k);
+        if (v) return decodeURIComponent(v).trim().toLowerCase();
+      }
+      const match = url.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
+      return match ? match[0].toLowerCase() : null;
+    } catch (e) {
+      return null;
     }
-
-    // regex fallback
-    const match = url.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
-    return match ? match[0].toLowerCase() : null;
-  } catch (e) {
-    return null;
   }
-}
 
-
-
-  // 🔹 Verify Device
+  // 🔹 Verify Device + Redirect
   function verifyDeviceAndRedirect(qrURL) {
+    console.log("Scanned QR URL:", qrURL);
     const email = extractEmailFromQR(qrURL);
     const deviceId = getDeviceId();
+
+    // 🚀 Direct open form (skip firebase issue)
+    if (qrURL.includes("docs.google.com/forms")) {
+      window.location.href = `?redirect=${encodeURIComponent(qrURL)}`;
+      return;
+    }
 
     if (!email) {
       alert("❌ Email not found in QR. Please check QR content.");
       return;
     }
 
-    db.collection("registrations").doc(email).get().then((docSnap) => {
-      if (!docSnap.exists) {
-        db.collection("registrations").doc(email).set({
-          deviceId: deviceId,
-          createdAt: Date.now()
-        }).then(() => {
-          window.location.href = `?redirect=${encodeURIComponent(qrURL)}`;
-        });
-      } else {
-        const savedDevice = docSnap.data().deviceId;
-        if (savedDevice === deviceId) {
-          window.location.href = `?redirect=${encodeURIComponent(qrURL)}`;
+    // ✅ Firebase check (agar tum Firebase use kar rahe ho)
+    if (typeof db !== "undefined") {
+      db.collection("registrations").doc(email).get().then((docSnap) => {
+        if (!docSnap.exists) {
+          db.collection("registrations").doc(email).set({
+            deviceId: deviceId,
+            createdAt: Date.now()
+          }).then(() => {
+            window.location.href = `?redirect=${encodeURIComponent(qrURL)}`;
+          });
         } else {
-          alert("❌ Unauthorized Device! This email is already used on another device.");
-          qrResult.textContent = "❌ Access denied: Device mismatch.";
+          const savedDevice = docSnap.data().deviceId;
+          if (savedDevice === deviceId) {
+            window.location.href = `?redirect=${encodeURIComponent(qrURL)}`;
+          } else {
+            alert("❌ Unauthorized Device! This email is already used on another device.");
+            qrResult.textContent = "❌ Access denied: Device mismatch.";
+          }
         }
-      }
-    });
+      });
+    } else {
+      // agar firebase connected nahi hai to direct redirect
+      window.location.href = `?redirect=${encodeURIComponent(qrURL)}`;
+    }
   }
 
   // 🔹 Start Scanner
   function startScanner() {
     navigator.mediaDevices.getUserMedia({
-      video: {
-        facingMode: { ideal: 'environment' }
-      }
+      video: { facingMode: { ideal: 'environment' } }
     }).then((stream) => {
       video.srcObject = stream;
       video.setAttribute('playsinline', true);
@@ -198,16 +192,14 @@ function extractEmailFromQR(url) {
     });
   }
 
-  // 🔹 QR Detection
+  // 🔹 QR Detection (Camera)
   function tick() {
     if (video.readyState === video.HAVE_ENOUGH_DATA) {
       canvasElement.height = video.videoHeight;
       canvasElement.width = video.videoWidth;
       canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
       const imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
-      const code = jsQR(imageData.data, imageData.width, imageData.height, {
-        inversionAttempts: 'dontInvert'
-      });
+      const code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: 'dontInvert' });
       if (code) {
         qrResult.textContent = `✅ QR Code: ${code.data}`;
         verifyDeviceAndRedirect(code.data);
@@ -244,6 +236,3 @@ function extractEmailFromQR(url) {
     reader.readAsDataURL(file);
   });
 };
-
-
-
